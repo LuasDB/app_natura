@@ -1,0 +1,525 @@
+ /* IMportaciones*/
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(https://example.com/MaterialIcons-Regular.eot);
+    /* For IE6-8 */
+    src: local('Material Icons'),
+        local('MaterialIcons-Regular'),
+        url(https://example.com/MaterialIcons-Regular.woff2) format('woff2'),
+        url(https://example.com/MaterialIcons-Regular.woff) format('woff'),
+        url(https://example.com/MaterialIcons-Regular.ttf) format('truetype');
+}
+
+
+ /*Colores variables*/
+ :root {
+     --primary: #db812e;
+     --secondary: #f3b780;
+     --secundary-light:rgb(243, 183, 128,0.5);
+     --white: #ffffff;
+     --black: #000000;
+     --gray:gray;
+     --gray-light:rgb(128, 128, 128,0.4);
+     --success:green;
+ }
+
+ * {
+     box-sizing: border-box;
+     margin: 0;
+     padding: 0;
+
+ }
+
+ html{
+    font-size: 62.5%;
+    font-family: 'Quicksand', sans-serif;
+ }
+body{
+    background-color: var(--white);
+}
+ /******Utilidades**********/
+ .btn-success {
+     width: 70%;
+     height: 3rem;
+     align-self: center;
+   
+
+     background-color: var(--primary);
+     color: var(--white);
+     border: none;
+     border-radius: 0.5rem;
+     cursor: pointer;
+    font-size: 1.8rem;
+ }
+ .btn-browse{
+    width: 30%;
+    height: 2.5rem;
+    align-self: center;
+    
+    
+        background-color: var(--primary);
+        color: var(--white);
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 1.5rem;
+
+ }
+ button.btn-cancel{
+    width: 70%;
+    height: 3.5rem;
+    padding: 2rem auto;
+    align-self: center;
+    
+    background-color:red;
+    color: var(--white);
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1.8rem;
+
+ }
+ .btn-pago{
+    width: 95%;
+    height: 2.5rem;
+    padding: 2rem auto;
+    background-color: var(--success);
+    color: var(--white);
+    border:none;
+    border-radius: 1rem;
+    font-size: 1.2rem;
+ }
+ .btn-cancel {
+     width: 70%;
+     margin-top: 1.3rem;
+    padding: 2rem auto;
+
+     background-color: red;
+     color: var(--white);
+     border: none;
+     border-radius: 1rem;
+ }
+ .btn-new{
+    width: 50%;
+    height:3.5rem;
+    margin:1rem 0;
+    padding: 2rem auto;
+    
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 1rem;
+    font-size:2rem;
+ }
+ .btn-new i{
+    margin-right: 1rem;
+
+ }
+ .btn-new-order{
+    width: 100%;
+    height: 3.5rem;
+    padding: 1rem auto;
+    
+    border-radius: 1rem;
+    background-color: var(--secundary-light);
+    border: none;
+
+    color: var(--white);
+    font-size: 2rem;
+ }
+ .hide{
+    display:none!important;
+ }
+.header-label{
+    position: fixed;
+    right: 2rem;
+    top:2.5rem;
+    z-index: 100;
+
+    color: var(--primary);
+    font-size: 2rem;
+
+
+}
+.card{
+    padding: 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 1px 1px 3px -1px var(--primary);
+    margin: 2rem 0;
+}
+.message-error{
+    color: red;
+    
+}
+.border-error{
+    border-color: red;
+}
+
+/*ASIDE*/
+aside{
+    position: fixed;
+    top: 1rem;
+    z-index: 2;
+    right: -30rem;
+
+    width: 29rem;
+    height: 95vh;
+    margin: 1rem 0;
+    padding: 2.5rem 1rem;
+    background-color: var(--white);
+    border-radius: 1rem;
+
+    transition: 0.7s;
+    
+}
+aside h2{
+    margin-top: 2rem;
+    text-align: end;
+    font-size: 2.4rem;
+
+}
+aside h2 span{
+    color: var(--primary);
+}
+aside ul{
+    list-style: none;
+    font-size: 2.5rem;
+    margin-top:5rem;
+}
+aside ul li{
+    margin:1rem 0;
+    padding: 1rem 2rem;
+    
+    border-radius: 1rem;
+    cursor: pointer;
+    color: var(--primary);
+
+}
+aside ul li:hover {
+    background-color: var(--primary);
+    color: var(--white);
+    
+}
+.selected{
+    background-color: var(--primary);
+        color: var(--white);
+}
+#menu_check{
+   display: none;
+}
+#menu {
+    position: fixed;
+    right: 2rem;
+    top: 2.7rem;
+
+}
+#close {
+   display: none;
+    position: fixed;
+    right: 2rem;
+    top: 2.7rem;
+
+}
+#menu_check:checked~ label #close{
+    display: block;
+
+}
+#menu_check:checked~label #menu {
+    display:none ;
+
+}
+#menu_check:checked ~ aside {
+    right: 0;
+
+}
+
+  
+ /****SECCION DEL LOGIN*****/
+ main.login {
+     display: grid;
+     place-items: center;
+     
+     background-color: var(--white);
+ }
+
+ .container-login {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     margin: 3rem;
+     padding: 3rem auto;
+
+     width: 90%;
+
+
+     box-shadow: 1px 2px 2px 1px  var(--secondary);
+
+ }
+
+ .container-login img {
+     width: 10rem;
+ }
+
+ .container-login p {
+     text-align: center;
+     width: 10rem;
+     margin-bottom: 0.8rem;
+
+ }
+
+ .container-login span {
+     font-weight: bold;
+     margin-bottom: 1.2rem;
+ }
+
+ .container-login input {
+     margin-bottom: 2rem;
+     padding: 0.2rem 1rem;
+     border-radius: 1rem;
+     border: 1px solid var(--secondary);
+     
+     
+ }
+
+ .container-login button {
+     margin-bottom: 2rem;
+ }
+ .container-login .remember-pass{
+    margin-bottom: 0.2rem;
+    color: var(--secondary);
+    cursor: pointer;
+ }
+ .container-login .create-account{
+    color: var(--primary);
+    cursor: pointer;
+ }
+ /*Crear nuevo usuario*/
+
+.form-new-user{
+    display: flex;
+    flex-direction: column;
+    
+    width: 90%;
+    margin: 3rem 0;
+    font-size: 1.2rem;
+
+}
+.form-new-user input{
+
+    width: 90%;
+    margin-bottom: 1.6rem;
+    font-size: 1.2rem;
+    padding: 0.2rem 0.8rem;
+
+    border: none;
+    border-bottom: 2px solid var(--primary);
+}
+.form-new-user input::placeholder {
+    color:var(--gray-light);
+}
+.form-new-user label{
+    color: var(--primary);
+}
+/*Customers*/
+.section-customers{
+    margin-top: 2.5rem;
+    padding:1rem
+}
+.browser{
+    display: flex;
+    flex-direction: row;
+    margin:0rem 2rem 2rem 0;
+}
+.browser label{
+   
+    margin-right: 1rem;
+    background-color: var(--white);
+    color: var(--primary);
+    max-width: 50%;
+    border-radius: 1.8rem;
+
+}
+.browser label input{
+
+    width: 90%;
+    border: none;
+    outline: none;
+    border-radius: 1rem;
+    font-size: 1.8rem;
+}
+.card-customer span{
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+p.customer-owe{
+    font-size: 1.6rem;
+}
+p.customer-owe span{
+    font-size: 1.8rem;
+    color:var(--primary);
+}
+p.whatsapp-number {
+    font-size: 2rem;
+   
+}
+p.whatsapp-number i{
+    color: green;
+}
+/*Section customer*/
+.section-customer{
+    margin-top: 2rem;
+    padding: 3rem 2rem 1rem 2rem;
+}
+.section-customer h3,h1{
+    color: var(--primary);
+}
+.section-customer h3 span {
+    color: var(--black);
+}
+.card-product{
+    display: flex;
+    flex-direction: row;
+    font-size: 1.2rem;
+}
+.card-product .title{
+    margin-right: 0.5rem;
+}
+.data-product{
+    flex-basis: calc(50% - 1rem);
+}
+.data-product #metodo-pago{
+    width: 120%;
+    height: 2rem;
+    font-size:1.2rem;
+
+}
+.title,.price span{
+    color: var(--primary);
+}
+.clave{
+    margin-bottom: 0;
+}
+
+/* SECTION ADD NEW CUSTOMER*/
+.section-add-customer h2{
+    color:var(--primary);
+}
+.section-add-customer{
+    display: flex;  
+    flex-direction: column;
+    margin:3rem 2rem 0 2rem;
+    padding: 1rem;
+    font-size: 1.5rem;
+}
+.section-add-customer label{
+    color: var(--primary);
+
+}
+.section-add-customer input {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    outline: none;
+    border: 1px solid var(--secondary);
+    background-color: var(--secundary-light);
+    border-radius: 1rem;
+    color: var(--primary);
+}
+.section-add-customer .note{
+    font-size: 1rem;
+    color: var(--primary);
+}
+/*Section new orden*/
+.section-new-order{
+    display: flex;
+    flex-direction: column;
+    margin: 4.5rem 2rem;
+    padding: 2rem;
+    font-size: 1.5rem;
+
+}
+.section-new-order h2{
+    margin-bottom: 1rem;
+    color: var(--primary);
+    text-align: center;
+}
+.section-new-order h3 {
+    margin-bottom: 3.2rem;
+    color: var(--primary);
+
+}
+.section-new-order h3 span{
+    color:var(--black);
+}
+.section-new-order select{
+    margin-bottom: 1.6rem;
+    font-size: 2rem;
+    border-radius: 1rem;
+    border: none;
+    background-color: var(--secondary);
+    color: var(--white);
+    outline: none;
+
+}
+.card-new-product input{
+    margin-bottom: 1rem;
+    padding:0.5rem;
+    border: none;
+    background-color: var(--secundary-light);
+    border-radius: 1rem;
+    
+}
+.total{
+    color:var(--primary);
+}
+
+/**Section cycles**************************************************************************+*/
+.section-cycles{
+    margin: 5rem 0;
+    padding: 4rem;
+    font-size: 1.5rem;
+}
+.data-cycle,.data-cycle div h2{
+    color: var(--primary);
+}
+.data-cycle p span,.data-cycle h3{
+    color:var(--black)
+}
+.data-cycle p span.ganancia{
+    color:green;
+    
+}
+.data-cycle p.result{
+border-top: 1px solid var(--primary);
+}
+/**SECTION NEW CYCLE ************************************************************************************************/
+
+.section-new-cycle{
+    display: flex;
+    flex-direction:column;
+    margin:5rem 0;
+    padding: 4rem;
+    font-size: 2rem;
+}
+.section-new-cycle h2,.section-new-cycle label{
+    
+    color: var(--primary);
+
+}
+.section-new-cycle input{
+    margin-bottom: 1rem;
+    padding: 1rem;
+    outline: none;
+    border: 1px solid var(--secondary);
+    background-color: var(--secundary-light);
+    border-radius: 1rem;
+    color: var(--primary);
+}
+
+
+
+
+
+
+
