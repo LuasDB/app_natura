@@ -31,6 +31,7 @@ const date = new Date();
 const year = date.getFullYear();
 
 let idUser = null;
+let idCustomer = null;
 let productosNuevos = {};
 let envioProductos = [];
 let pedidoClienteId = null;
@@ -52,7 +53,8 @@ function writeUserData(userId, name, lastName, whatsapp, email) {
     email: email,
     whatsapp: whatsapp,
     customers: 'null',
-    cycles:'null'
+    cycles: 'null',
+    
     
   })) { 
   Swal.fire({
@@ -226,14 +228,15 @@ function listeners() {
         createNewCycle();
         break;
       case 'aceptar_nvoCiclo':
-        sendCycleDB();
-        callHome();
+        sendCycleDB();  
         break;
+      
       
     }
 
     if (cliente[0] === 'customer') { callCustomerById(cliente[1]); }
     if (cliente[0] === 'nuevo_pedido') { callNewOrderByCustomer(cliente[1]); }
+    if (cliente[0] === 'pago') {registerPayment(cliente[1]);}
 
   });
   
@@ -482,6 +485,29 @@ function createNewOrder() {
   
   
 }
+function registerPayment(ciclo) {
+  Swal.fire({
+        title: '¿Ya te pagaron? \n ¿Deseas registrar este pago?',
+        showDenyButton: true,
+        confirmButtonText: 'Registrar',
+        denyButtonText: `Cancelar`,
+      }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+          Swal.fire('Pago registrado!', '', 'success')
+          const refPayment = ref(db, 'users/' + idUser + '/customers/' + idCustomer + '/pedidos/' + ciclo);
+          let  pago =  get(refPayment).then(async(payment) => {
+            let arr = await payment.val();
+            return arr;
+;
+          });
+          console.log('Regresamos');
+          console.log(JSON.parse(pago));
+        } else if (result.isDenied) {
+          Swal.fire('El pago NO se registro!', '', 'info')
+        }
+      })
+}
 /****SEND DB FIREBASE********************************************************************************************* */
 function sendOrderDB() {
   let ciclo = document.querySelector('#cycles');
@@ -536,17 +562,18 @@ function sendCycleDB() {
     const refCycles = ref(db, 'users/' + idUser + '/cycles/' + year + '/ciclo' + cycle);
     
     get(refCycles).then((cycles) => {
-      console.log(cycles.val());
+     
       if(cycles.val()===null) {
         const refNewOrder = ref(db, 'users/' + idUser + '/cycles/'+ year +'/ciclo' + cycle);
-        set(refNewOrder, { number: cycle, total: 0, totalProducts: 0, gananciaNeta: 0,totalClientes:0});
+        set(refNewOrder, { number: cycle, total: 0, totalProducts: 0, gananciaNeta: 0,totalClientes:0,start:cycle_start,end:cycle_end});
          Swal.fire({
           position: 'center',
           icon: 'success',
           title: 'Tu ciclo se dio de alta correctamente!',
           showConfirmButton: false,
           timer: 2500
-        });
+         });
+        callHome();
       }else if (cycles.val().number === cycle) {
          Swal.fire({
           position: 'center',
@@ -681,14 +708,15 @@ function callCustomersList(idUser) {
 
   
 }
-function callCustomerById(idCustomer) {
-  console.log('Cliente No.:' + idCustomer);
+function callCustomerById(idCustomer1) {
+  idCustomer = idCustomer1;
+  console.log('Cliente No.:' + idCustomer1);
   monitor.innerHTML = '';
   let customer = document.createElement('section');
   customer.classList.add('section-customer');
   
 
-  const refCustomer = ref(db, 'users/' + idUser + '/customers/' + idCustomer);
+  const refCustomer = ref(db, 'users/' + idUser + '/customers/' + idCustomer1);
   get(refCustomer).then((snapshot) => {
     
     let person = snapshot.val();
@@ -705,13 +733,13 @@ function callCustomerById(idCustomer) {
     <p class="whatsapp-number"><i class="fab fa-whatsapp"></i> ${person.whatsapp}</p>
     <p class="customer-owe">Adeudo total: <span>$${person.owe}</span></p>
     </div>
-    <button class="btn-new" id="nuevo_pedido:${idCustomer}"><i class="fas fa-plus-circle"></i> Nuevo pedido</button>
+    <button class="btn-new" id="nuevo_pedido:${idCustomer1}"><i class="fas fa-plus-circle"></i> Nuevo pedido</button>
     <h3>Historial de pedidos</h3>
     `;
     //Asignamos una variable para construir el contenido
     let contenido = '';
     
-    const refPedidos = ref(db, 'users/' + idUser + '/customers/'+ idCustomer + '/pedidos');
+    const refPedidos = ref(db, 'users/' + idUser + '/customers/'+ idCustomer1 + '/pedidos');
     
     get(refPedidos).then((snap) => {
       if (snap.val() === null) {
@@ -766,17 +794,46 @@ function callNewOrderByCustomer(idCustomer) {
   pedidoClienteId = idCustomer;
   monitor.innerHTML = '';
   let contenido = '';
-  const refCustomer = ref(db, 'users/' + idUser + '/customers/' + idCustomer);
+ 
+
+
+    
+     const refCustomer = ref(db, 'users/' + idUser + '/customers/' + idCustomer);
   get(refCustomer).then((snapshot) => {
     contenido += `
     <section class="section-new-order ">
       <h2>Agrega los elementos del nuevo pedido</h2>
       <h3 id="pedido_cliente:${idCustomer}">Cliente: <span>${snapshot.val().nameCustomer} ${snapshot.val().lastNameCustomer}</span></h3>
       <label for="cycles"></label>
-      <select name="cycles" id="cycles">
-          <option value="10">Ciclo 10</option>
-          <option value="11">Ciclo 11</option>
-          <option value="12">Ciclo 12</option>
+      <select name="cycles" id="cycles">`
+    
+     const refCycles = ref(db, 'users/' + idUser + '/cycles/' + year)
+      get(refCycles).then(cycles => {
+      Object.entries(cycles.val()).forEach(([key,val]) => {
+        
+        let fechaInicio = val.start.split('-');
+        let fechaFin = val.end.split('-');
+        let ahorita = new Date();
+        let ini = new Date(fechaInicio);
+        let fin = new Date(fechaFin);
+        if (ahorita >= ini && ahorita <= fin) {
+          console.log('---------------------------------------------');
+          console.log('Inicio: ' + ini);
+          console.log('Inicio: ' + fin);
+          console.log('Ciclo:' + key + ', estas en el ciclo');
+          contenido += `<option value="${val.number}">Ciclo ${val.number}</option>`;
+        } else {
+          console.log('---------------------------------------------');
+          console.log('Inicio: ' + ini);
+          console.log('Inicio: ' + fin);
+          console.log('Ciclo:' + key + ', estas fuera de ciclo');
+       }
+
+    });
+      
+      
+      contenido+=`
+          
       </select>
       <button class="btn-new-order" id="nuevo_producto"><i class="fas fa-plus-circle"></i> Nuevo producto</button>
       <div class="card card-new-product hide" id="newProduct">
@@ -808,6 +865,8 @@ function callNewOrderByCustomer(idCustomer) {
     `;
      monitor.innerHTML += contenido;
   });
+  });
+ 
  
   
 }
